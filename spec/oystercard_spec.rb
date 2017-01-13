@@ -101,7 +101,7 @@ describe Oystercard do
     end
 
     it 'checks if the station_history is empty by default' do
-      expect(subject.journey_history).to eq([])
+      expect(subject.station_history_array).to eq([])
     end
 
     context 'After touching in and out' do
@@ -122,8 +122,8 @@ describe Oystercard do
         subject.touch_in(entry_station)
         subject.touch_out(exit_station)
         # expect(subject.journey_history.first).to eq(journey)
-        expect(subject.journey_history.first.entry_station.name).to eq(journey.entry_station.name)
-        expect(subject.journey_history.first.exit_station.name).to eq(journey.exit_station.name)
+        expect(subject.station_history_array.first[:entry_station]).to eq(journey.entry_station)
+        expect(subject.station_history_array.first[:exit_station]).to eq(journey.exit_station)
 
       end
 
