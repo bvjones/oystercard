@@ -62,7 +62,7 @@ context 'so customer can pay for journey' do
   # I need to know where I've travelled from
   it 'oystercard remembers the entry_station' do
     oystercard.top_up Journey::MIN_FARE
-    expect{oystercard.touch_in(entry_station)}.to change{oystercard.entry_station}.to(entry_station)
+    expect{oystercard.touch_in(entry_station)}.to change{oystercard.current_journey.entry_station}.to(entry_station)
   end
 end
 # In order to know where I have been
@@ -70,7 +70,7 @@ end
 # I want to see to all my previous trips
 it 'so customer knows where has been, oystercard tracks journeys' do
   oystercard.top_up Journey::MIN_FARE
-  journey = Journey.new
+  journey = Journey.new(nil)
   entry_station_obj = Station.new("Bank", 1)
   exit_station_obj = Station.new("Tower Bridge", 1)
   journey.entry_station = entry_station_obj
@@ -78,8 +78,8 @@ it 'so customer knows where has been, oystercard tracks journeys' do
   oystercard.touch_in(entry_station_obj)
   oystercard.touch_out(exit_station_obj)
   # expect(oystercard.journey_history.first).to eq(journey)
-  expect(oystercard.station_history_array.first[:entry_station]).to eq(journey.entry_station)
-  expect(oystercard.station_history_array.first[:exit_station]).to eq(journey.exit_station)
+  expect(oystercard.current_journey_log.journey_history.first[:entry_station]).to eq(journey.entry_station)
+  expect(oystercard.current_journey_log.journey_history.first[:exit_station]).to eq(journey.exit_station)
 end
 # In order to know how far I have travelled
 # As a customer
@@ -90,20 +90,20 @@ it 'so customer knows where they have travelled, store station name and zone' do
   oystercard.top_up Journey::MIN_FARE
   entry_station = Station.new("Bank", 1)
   oystercard.touch_in(entry_station)
-  expect(oystercard.entry_station.zone).to eq(1)
-  expect(oystercard.entry_station.name).to eq("Bank")
+  expect(oystercard.current_journey.entry_station.zone).to eq(1)
+  expect(oystercard.current_journey.entry_station.name).to eq("Bank")
 end
 # In order to be charged correctly
 # As a customer
 # I need a penalty charge deducted if I fail to touch in or out
 it 'so customer is charged correctly, will be penalized if they forget to touch out' do
-  journey = Journey.new
+  journey = Journey.new(nil)
   journey.entry_station = entry_station
   # journey.exit_station = exit_station
   expect(journey.fare).to eq 6
 end
 it 'so customer is charged correctly, will be penalized if they forget to touch in' do
-  journey = Journey.new
+  journey = Journey.new(nil)
   # journey.entry_station = entry_station
   journey.exit_station = exit_station
   expect(journey.fare).to eq 6

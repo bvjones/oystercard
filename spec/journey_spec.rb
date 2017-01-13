@@ -1,7 +1,7 @@
 require 'journey'
 
 describe Journey do
-  let (:journey) { Journey.new }
+  let (:journey) { Journey.new(nil) }
   it 'can save an entry station' do
     expect{journey.entry_station="Bank"}.not_to raise_error
   end
