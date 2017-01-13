@@ -1,5 +1,4 @@
 require_relative './journey'
-require_relative './oystercard'
 
 class Journey_log
   attr_reader :journey_history, :journey_class
@@ -16,19 +15,18 @@ class Journey_log
   end
 
   def start(card, station)
-    # card.current_journey = journey_class.new(station)
-    @current_journey= journey_class.new(station)
+    new_journey = journey_class.new
+    new_journey.start(station)
+    @current_journey= new_journey
   end
 
   def finish(card, station)
-    # card.current_journey.exit_station= station
-    # card.current_journey = nil
     current_journey.end(station)
     add(current_journey)
   end
 
   def reset_current_journey
-    current_journey=nil
+    @current_journey=nil
   end
 
   def journeys(card)

@@ -10,7 +10,7 @@ MIN_LIMIT = 1
   def initialize
     @balance = 0
     @current_journey_log = Journey_log.new
-    @current_journey = Journey.new(nil)
+    @current_journey = Journey.new
   end
 
   def top_up(money)
@@ -20,7 +20,8 @@ MIN_LIMIT = 1
 
   def touch_in(entry_station)
     raise "Insufficient funds. Must top up card." if balance < MIN_LIMIT
-    @current_journey= Journey.new(entry_station)
+    @current_journey= Journey.new
+    current_journey.start(entry_station)
   end
 
   def touch_out(exit_station)

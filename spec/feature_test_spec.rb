@@ -70,14 +70,13 @@ end
 # I want to see to all my previous trips
 it 'so customer knows where has been, oystercard tracks journeys' do
   oystercard.top_up Journey::MIN_FARE
-  journey = Journey.new(nil)
+  journey = Journey.new
   entry_station_obj = Station.new("Bank", 1)
   exit_station_obj = Station.new("Tower Bridge", 1)
   journey.entry_station = entry_station_obj
   journey.exit_station = exit_station_obj
   oystercard.touch_in(entry_station_obj)
   oystercard.touch_out(exit_station_obj)
-  # expect(oystercard.journey_history.first).to eq(journey)
   expect(oystercard.current_journey_log.journey_history.first[:entry_station]).to eq(journey.entry_station)
   expect(oystercard.current_journey_log.journey_history.first[:exit_station]).to eq(journey.exit_station)
 end
@@ -97,15 +96,13 @@ end
 # As a customer
 # I need a penalty charge deducted if I fail to touch in or out
 it 'so customer is charged correctly, will be penalized if they forget to touch out' do
-  journey = Journey.new(nil)
+  journey = Journey.new
   journey.entry_station = entry_station
-  # journey.exit_station = exit_station
   expect(journey.fare).to eq 6
 end
 it 'so customer is charged correctly, will be penalized if they forget to touch in' do
-  journey = Journey.new(nil)
-  # journey.entry_station = entry_station
-  journey.exit_station = exit_station
+  journey = Journey.new
+  journey.end(Station.new("bond", 1)) #= exit_station
   expect(journey.fare).to eq 6
 end
 
